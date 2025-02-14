@@ -23,7 +23,7 @@ jobs:
       - name: cache
         uses: Swatinem/rust-cache@v2
       - name: test
-        run: RUSTFLAGS="-Clink-dead-code" cargo test
+        run: RUSTFLAGS="-Clink-dead-code  -Cinstrument-coverage" cargo test
   mac_test:
     runs-on: macos-latest
     strategy:
