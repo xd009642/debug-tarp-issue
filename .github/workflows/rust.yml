@@ -1,0 +1,66 @@
+name: Build
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+
+jobs:
+  mac_test:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        version:
+          - nightly
+        target:
+          - x86_64-apple-darwin	
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.version }}
+      - name: cache
+        uses: Swatinem/rust-cache@v2
+      - name: test
+        run: cargo test
+  mac_tarpaulin:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        version:
+          - nightly
+        target:
+          - x86_64-apple-darwin	
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.version }}
+      - name: cache
+        uses: Swatinem/rust-cache@v2
+      - name: test
+        run: | 
+          cargo install cargo-tarpaulin
+          cargo tarpaulin
+  mac_tarpaulin_no_dead_code:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        version:
+          - nightly
+        target:
+          - x86_64-apple-darwin	
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.version }}
+      - name: cache
+        uses: Swatinem/rust-cache@v2
+      - name: test
+        run: | 
+          cargo install cargo-tarpaulin
+          cargo tarpaulin --no-dead-code
